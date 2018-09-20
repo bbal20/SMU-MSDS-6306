@@ -1,0 +1,134 @@
+---
+title: "Patterson_a3_6306"
+author: "Kito Patterson"
+date: "9/19/2018"
+output: html_document
+```
+
+
+##PACKAGES
+```{R, ECHO=TRUE}
+library(fivethirtyeight)
+library(dplyr)
+````
+
+## 1.) GITHUB CLONING
+#cd ~/Desktop/doing_data_science/
+#git clone https://github.com/awesomedata/awesome-public-datasets.git
+
+
+
+
+## 2.) DATA SUMMARY 
+# a.) In R, please read in titanic.csv via either read.table() or read.csv(), assigning it to df.  
+#This dataset follows the passengers aboard the Titanic, including their fees paid, rooms rented, 
+#and survivorship status.
+```{R, ECHO=TRUE}
+df <- read.csv("~/Desktop/doing_data_science/awesome-public-datasets/Datasets/titanic.csv")
+head(df)
+```
+
+# b.) Output the respective count of females and males aboard the Titanic. Plot the frequency of females and males.
+```{R, ECHO=TRUE}
+table(df$Sex)
+barplot(table(df$Sex), ylab='Count', main='Barplot of Gender Distribution', col='lightblue')
+```
+
+#c.) Please use one apply function (to review: 
+#swirl() modules 11, 12) to output the means of Age, Fare, and Survival.  
+#Make sure the output is a real number for all three means. 
+```{R, ECHO=TRUE}
+apply(df[,c(2,6,10)],2,mean,na.rm=TRUE)
+````
+
+
+
+
+
+
+## 3.) FUNCTION BUILDING
+#a.) Create objects for the median Age, the minimum and maximum Duration of sleep, 
+#and the mean and standard deviation of the Rosenberg Self Esteem scale (RSES).  
+#You may need to specify a few options like in Problem 2 and live session.
+```{R, ECHO=TRUE}
+sleep_data_01 <- read.csv("~/Desktop/doing_data_science/sleep_data_01.csv")
+sleep.median.age <- min(sleep_data_01$Age, na.rm=TRUE)
+sleep.min.duration <- min(sleep_data_01$Duration, na.rm=TRUE)
+sleep.max.duration <- max(sleep_data_01$Duration, na.rm=TRUE)
+sleep.mean.RSES <- mean(sleep_data_01$RSES, na.rm=TRUE)
+sleep.sd.RSES <- sd(sleep_data_01$RSES, na.rm=TRUE)
+````
+
+#b.) Create a data.frame object called report: it should consist of the median age, 
+#the RSES mean and standard deviation respectively divided by five (since there are five questions 
+#and these scores are summed),and the range of Duration (the statistical definition of range; it should be a single number.)
+```{R, ECHO=TRUE}
+report <- data.frame(sleep.median.age, sleep.mean.RSES/5, sleep.sd.RSES/5, sleep.max.duration - sleep.min.duration)
+head(report)
+````
+
+#c.) Change the column names of this data.frame to MedianAge, SelfEsteem, SE_SD, and DurationRange
+```{R, ECHO=TRUE}
+rename(report, MedianAge=sleep.median.age, SelfEsteem=sleep.mean.RSES.5, SE_SD=sleep.sd.RSES.5, 
+       DurationRange=sleep.max.duration...sleep.min.duration )
+head(report)
+````
+
+#d.) Round the report to at most 2 digits: leave this as the closing line to the function
+```{R, ECHO=TRUE}
+round(report,2)
+````
+
+
+
+
+## 4.) FiveThirtyEight Data
+# a.) Install the fivethirtyeight package
+#Installed in the beginning 
+
+#b.) In the listing of Data sets in package ‘fivethirtyeight,’ assign the 22nd data set to an object ‘df.’
+```{R, ECHO=TRUE}
+data("college_recent_grads")
+df <- college_recent_grads
+head(df)
+````
+
+#c.) Use a more detailed list of the data sets to write out the URL in a comment to the related news story.
+#https://fivethirtyeight.com/features/the-economic-guide-to-picking-a-college-major/
+
+#d.) Using R command(s), give the dimensions and column names of this data frame.
+```{R, ECHO=TRUE}
+str(df)
+````
+
+
+
+
+
+## 5.) DATA SUMMARY
+# a.) Write an R command that gives you the column names of the data frame.  
+#Right after that, write one that counts the number of columns but not rows.  
+#Hint: The number should match one of your numbers in Question 1d for dimensions. 
+```{R, ECHO=TRUE}
+colnames(df)
+ncol(df)
+```
+
+# b.) Generate a count of each unique major_category in the data frame.  
+#I recommend using libraries to help.  To be clear, this should look like a matrix or data frame 
+#containing the major_category and the frequency it occurs in the dataset.  Assign it to major_coun
+```{R, ECHO=TRUE}
+major_count <- df %>%
+group_by(major_category) %>%
+summarise(count = n())
+```
+
+# c.) To make things easier to read, put par(las=2) before your plot to make the text perpendicular to the axis.  
+#Make a barplot of major_count.  Make sure to label the title with something informative (check the vignette if you need), label the x and y axis, 
+#and make it any color other than grey.  Assign the major_category labels to their respective bar.  
+#Flip the barplot horizontally so that bars extend to the right, not upward.  
+#All of these options can be done in a single pass of barplot(). Note: It’s okay if it’s wider than the preview pane.
+```{R, ECHO=TRUE}
+par(las=2)
+barplot(major_count$count, names=major_count$major_category, xlab="majors", main="Totals by Recent Major", horiz = TRUE, col = 'lightblue')
+```
