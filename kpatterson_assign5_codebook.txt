@@ -1,0 +1,19 @@
+Doing Data Science 
+Live Session Unit 5 Assignment
+
+Libraries:
+dplyr 
+regexPipes
+tidyr 
+
+Objects:
+df <- initial raw data (yob2016.txt)
+y2016 <- "yob2016.txt" dataset with one row removed (last name ending "yyyy")
+y2015 <- initial raw dataset (yob2015.txt)
+1.) final <- merge yob2016 and yob2015 
+2.) final <- dataframe with calculated column added (Total)
+3.) final <- subset gender='F'
+4.) final <- top ten female names sorted by Total column in desc order 
+
+
+
