@@ -1,0 +1,82 @@
+---
+title: "Patterson_a5_6306"
+author: "Kito Patterson"
+date: "9/30/2018"
+output: html_document
+---
+
+##GITHUB 
+#https://github.com/bbal20/SMU-MSDS-6306
+
+##Packages
+```{R, ECHO=TRUE}
+library(dplyr)
+library(regexPipes)
+library(tidyr)
+```
+
+##1a.) Import y2016 file with human readable columns
+```{R, ECHO=TRUE}
+df <- read.table("~/Desktop/doing_data_science/LiveSessionAssignment5_2/yob2016.txt", 
+                 header=FALSE,sep=";",col.names=c("name","gender","amount"))
+```
+
+##1b.) Display the summary structre of df
+```{R, ECHO=TRUE}
+str(df)
+```
+
+##1c.) Find name with 3 y's at the end 
+```{R, ECHO=TRUE}
+grep(df$name,"yyy$",value = TRUE) 
+```
+
+##1d.) Remove row/observation with 3 y's
+```{R, ECHO=TRUE}
+y2016 <- df[-grep(df$name,"yyy$") , ]
+```
+
+##2a.) Import y2015 file with human readable columns
+```{R, ECHO=TRUE}
+y2015 <- read.table("~/Desktop/doing_data_science/LiveSessionAssignment5_2/yob2015.txt", 
+                    header=FALSE,sep=",",col.names=c("name","gender","amount")) 
+```
+
+##2b.) Display last 10 rows
+#Everything seems to be sorted in ascending order by name
+```{R, ECHO=TRUE}
+tail(y2015,10)
+```
+
+##2c.) Merge y2016 and y2015 dataframes (no NA values)
+```{R, ECHO=TRUE}
+final <- merge(y2016, y2015, by=c("name","gender"), all=FALSE)
+sum(is.na(final))
+```
+
+##3a.) Create new 'Total' column 
+```{R, ECHO=TRUE}
+final <- final %>%
+  mutate(total = amount.x + amount.y)
+```
+
+##3b.) Sort top 10 by 'Total'
+```{R, ECHO=TRUE}
+head(final[order(final$total, decreasing=TRUE),], n=10)
+```
+
+##3c.) Remove males from dataframe and sort top 10 names for females
+```{R, ECHO=TRUE}
+final <- subset(final, gender=='F', select=c(name,total))
+final <- head(final[order(final$total, decreasing=TRUE),], n=10)
+```
+
+##3d.) Write top 10 females names and totals ONLY to csv file 
+```{R, ECHO=TRUE}
+write.csv(final, file="dd_hw_u5_final.csv")
+```
+
+
+
+
+          
